@@ -1,0 +1,76 @@
+syntax = "proto3";
+option java_package = "com.cd.proto";
+option java_multiple_files = true;
+
+message AddCartRequest {
+
+}
+
+message GetCartRequest {
+	int32 cart_id = 1;
+}
+
+message AddToCartRequest {
+	int32 cart_id = 1;
+    int32 product_id = 2;
+}
+
+message DeleteFromCartRequest {
+	int32 cart_id = 1;
+    int32 cart_product_id = 2;
+}
+
+message AddCartResponse {
+	Response response = 1;
+    int32 cart_id = 2;
+}
+
+message GetCartResponse {
+    Response response = 1;
+    int32 cart_id = 2;
+    repeated Product products = 3;
+}
+
+message AddToCartResponse {
+    Response response = 1;
+    Product product = 2; 
+}
+
+message DeleteFromCartResponse {
+    Response response = 1;
+}
+
+message Response {
+	ResponseCode code = 1;
+	repeated ValidationError validation_errors = 2;
+}
+
+message ValidationError {
+	string field = 1;
+	string message = 2;
+}
+
+message Product {
+    int32 id = 1;
+    string name = 2;
+    string description = 3;
+    double price = 4;
+    int32 stock = 5;
+}
+
+enum ResponseCode {
+    OK = 0;
+    BAD_REQUEST = 1;
+    NOT_FOUND = 2;
+    ERROR = 3;
+}
+
+service CartService {
+	rpc addCart(AddCartRequest) returns (AddCartResponse);
+
+    rpc getCart(GetCartRequest) returns (GetCartResponse);
+
+    rpc addToCart(AddToCartRequest) returns (AddToCartResponse);
+
+    rpc deleteFromCart(DeleteFromCartRequest) returns (DeleteFromCartResponse);
+}
